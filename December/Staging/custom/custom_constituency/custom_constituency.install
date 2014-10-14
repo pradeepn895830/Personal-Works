@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ * Create Table for Default Constituency.
+ */
+
+function custom_constituency_schema(){
+    $schema = array();
+	$schema['users_constituency'] = array(
+	   'description' => 'Store User\'s Default Constituency',
+	   'fields' => array(
+	      'id' => array(
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+		   ),
+	      'uid' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	      'tid' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	      'created' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	      'changed' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	    ),
+	   'primary key' => array('id'),	
+	);
+  return $schema;	
+} 

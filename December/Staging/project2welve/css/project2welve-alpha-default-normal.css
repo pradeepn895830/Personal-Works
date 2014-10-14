@@ -1,0 +1,190 @@
+/* This file will hold styles that are loaded using the same media query as the normal grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the widescreen layout unless they are overridden by the widescreen styles. */
+
+img { max-width: 100%; }
+ul.inline li { padding: 0  0.5em; }
+#zone-branding .navigation li a { padding: 0.6em 0.2em 1em 0.2em; }
+.region-header-second li a { padding: 0.3em 0; }
+#zone-branding .navigation ul li ul li{padding:0 0.3em;}
+#block-system-user-menu li.leaf.first a {padding-right: 0.5em;}
+#region-menu { margin-left: 1em; margin-top: 0.2em; }
+#block-system-user-menu li.leaf { margin: 0; }
+#region-header-first .block-views, #region-header-first .block-multiblock { margin-left: 25em; }
+#region-header-first .view-member-of-parliament .views-field-nothing-1, #region-header-first .view-member-of-parliament .views-field-nothing-2, #region-header-first .view-member-of-parliament .views-field-tid, #region-header-first .view-member-of-parliament .views-field-count{font-size:1em;}
+#region-header-first .view-member-of-parliament .views-field-count { width: 14em; padding-left: 2em; padding-top:0.9em; }
+#region-header-first .view-member-of-parliament .views-field-nothing-1, #region-header-first .view-member-of-parliament .views-field-nothing-2, #region-header-first .view-member-of-parliament .views-field-tid, #region-header-first .view-member-of-parliament .views-field-count { float: none; display: inline-block; }
+#region-header-first .view-id-member_of_parliament .views-field-ops { right: 0; top:0; }
+.region-header-first-inner .view-id-constituency_page .views-field-nothing { width: 33%; }
+.view-id-constituency_page .views-field-php { width: 33%; }
+.view-id-constituency_page .views-field-nothing .mp-photo { width: 18%; margin-right: 0.5em; }
+.view-id-constituency_page .views-field-nothing .mp-data { width: 79%; }
+.view-header .cpage-signup-block { margin: 0 0em 1em 0.5em; float: right; width: 17%; }
+.raise-issue-wrapper .desc-text { padding-top: 0.4em;  width:49%; }
+.logo-img { width: 23em; }
+.logo-img img { max-width: 100%; }
+.breadcrumb { margin-left: 18.5em; }
+.mp-debates-wrapper .content, .mp-qaasked-wrapper .content { width: 70%; }
+.mp-debates-wrapper .label, .mp-qaasked-wrapper .label { width: 80%; }
+#region-content .mp-attendance-wrapper .label, #region-content .question-asked-wrapper .label { width: 24em; padding-bottom: 2em; }
+.view-display-id-entity_view_devreport .views-field-field-expenditure-incurred, .view-display-id-entity_view_devreport .views-field-field-unspent-balance { width: 50%; padding-right: 0%; }
+.block-views-discussion-block .view-content { width: 66%; }
+.view-constituency-page .views-field.views-field-field-image{ width: 19.2em; margin-top: 3em;}
+.view-id-constituency_details .views-field.views-field-field-image { width: 19.2em; margin-top: -1.5em;}
+.view-constituency-page .views-field-description { margin-bottom: 1em; }
+#region-content .view-caught-on-camera .views-row { max-height: 50em; width: 95.5%; }
+#region-content .view-caught-on-camera .views-field { width: 100%; }
+#region-content .view-caught-on-camera .views-field-body { width: 100%; }
+#region-content .view-caught-on-camera .pager .pager-previous{left:2em;}
+#region-content .view-caught-on-camera .views-field-title {
+ 	padding:1em;
+}
+.view-id-constituency_page .views-field-php #high-and-low li { width: 30%; }
+.view-id-constituency_page .item-list .pager { width: 98%; }
+.view-id-constituency_page .item-list .pager .pager-previous { left: -40px; }
+.view-id-constituency_page .item-list .pager li.first, .view-id-constituency_page .item-list .pager li.first a, .view-id-constituency_page .item-list .pager li.first a:hover { background-size: 70%; }
+.view-id-constituency_page .item-list .pager li.pager-last, .view-id-constituency_page .item-list .pager li.pager-next.last, .view-id-constituency_page .item-list .pager li.last a, .view-id-constituency_page .item-list .pager li.last a:hover { background-size: 70%; }
+.view-header .cpage-signup-block { margin-top: 3em; }
+.view-id-latest_issues.view-display-id-page .views-field-name {width:49%;}
+.zone-content-wrapper #region-content .block-system-main .node-issues .views-field-comment-count {width:14%;}
+.zone-content-wrapper #region-content .node-issues .views-field-sharethis {width: 49%;}
+.block-views-latest-issues-block .views-field-count { padding-top: 0.3em; }
+.gridCol { width: 46%; }
+.view-display-id-block_previous_issues .views-field-ops { width: 30%; margin-right: 0.5em; }
+.view-display-id-block_previous_issues .views-field-name, .view-display-id-block_previous_issues .views-field-count { width: 65%; }
+.zone-content-wrapper #region-content .views-field-sharethis { width: 62%; }
+.zone-content-wrapper #region-content .block-system-main .node-issues .views-field-count { width: 15%; }
+.zone-content-wrapper #region-content .form-actions.form-wrapper { margin-left: 0.1em; }
+.comment-form .form-item.form-type-item { margin: 0 0.1em 0 0; }
+/* Page Constituency Details */
+/*.view-id-constituency_details .views-field-name { width: 98%; }*/
+.view-id-constituency_details .views-field-field-assem-constituencies { width: auto; }
+.view-id-constituency_details .views-field-field-female-electoral { background-size: 90%; }
+.view-id-constituency_details .views-field-field-male-electoral { background-size: 90%; }
+.view-display-id-entity_view_highs_lows #high-and-low li { width: 23%; }
+.view-display-id-entity_view_demographics .views-field-field-population-density { left: 37%; width: 30%; }
+.view-display-id-entity_view_demographics .views-field-field-population-growth-rate .growth-rate-placeholder { width: 2.5em; }
+.view-display-id-entity_view_demographics .views-field-field-population-growth-rate { width: 9em; left: 69%; }
+.view-display-id-entity_view_demographics .views-field-nothing-1 { left: 54%; }
+.view-display-id-entity_view_qudeb .view-content .mp-debates-wrapper {width: 41%;}
+/* Landing Page */
+
+.representativeDetails .view-member-of-parliament .views-field-count, .representativeDetails .view-member-of-parliament .views-field-count { margin-top: 3em; margin-left: 1em; }
+.siteBrand {min-height:240px;}
+.siteBrand.clearfix{*min-height:240px;}
+.siteBanner{width:40%; top:2em;}
+.joinSite{margin-top:2em; margin-top:2em\0;}
+.view-display-id-block_home_volunteer.view-users-profile .views-field-picture {max-width: 140px;}
+.joinSite h3{	background:url(../images/arrow-close.png) no-repeat 54% 0.9em;}
+.joinSite h3.open{background:url(../images/arrow-open.png) no-repeat 54% 0.9em;}
+.logoMessage p.msg {font-size: 3em;}
+.whyJoin .divider { width: 4em; margin: 0 1em; }
+.whyJoin .vitalThings { width: 44em; }
+.whyJoin .vitalThings .image { float: left; width: 8em; }
+.whyJoin .vitalThings .details { width: 34em; margin-left: 2em; }
+.whyJoin .vitalThings h4 { margin-bottom: 0em; }
+.howdoJoin { background:url('../images/iamin-joinbgdk.png') no-repeat left 17em;}
+.step-row {margin-top: 9em;}
+.step-row .step {margin: 0 3em; }
+.step-row .step .step-item {width: 36%; }
+.step-row.three{margin-top: 10em;}
+.step-row .step .img {width:59%;}
+.step-row .step .step-item h5 {font-size:2.3em;}
+.step-row .step .app.step-item {width:33%;}
+.step-row .step .app.step-item a {font-size:1.2em;}
+.step-row .step .issues-list.step-item .item {width:29%;}
+.becomeVolunteer {background: url('../images/become-volunteer.png') no-repeat scroll 100% top; margin-top: 20em; }
+.findConstituency .form-type-item { width: 33em; padding-top: 0.5em;}
+.findConstituency h1 { font-size: 1.8em; }
+.findConstituency .form-type-textfield {max-width: 38em;width: auto;overflow: hidden;}
+.page-home .zone-header-wrapper{ background-size:105%;}
+.representativeDetails .view-member-of-parliament .views-field-nothing-1, .representativeDetails .view-member-of-parliament .views-field-nothing-2, .representativeDetails .view-member-of-parliament .views-field-tid, .representativeDetails .view-member-of-parliament .views-field-count{ width:9em;}
+.view-display-id-entity_view_devreport .views-field-field-expenditure-incurred .desc-text{ background-position:138px 8px;}
+.view-display-id-entity_view_devreport .views-field-field-unspent-balance .desc-text{ background-position:0px -11px; background-size:40%;}
+.view-header #cpage-signup{ 
+background: #f9d27c; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y5ZDI3YyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNGJiNDIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #f9d27c 0%, #f4bb42 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9d27c), color-stop(100%,#f4bb42)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #f9d27c 0%,#f4bb42 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #f9d27c 0%,#f4bb42 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #f9d27c 0%,#f4bb42 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #f9d27c 0%,#f4bb42 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9d27c', endColorstr='#f4bb42',GradientType=0 ); /* IE6-8 */
+}
+.howdoJoin h4{ margin-top:1.2em;}
+.step-row .step .news.step-item{ padding-left:125px;}
+
+.downloadAppLHSWrap .appBtn a {font-size: 1.2em;padding-left: 1.7em;width: 16em;}
+
+/*explore*/
+.block-block-21, .block-block-26, .block-block-28, .block-block-29{margin-left: 20.5em;}
+#explore_localities_form_wrapper .findConstituency .form-type-item {width: 26em;}
+
+/*blogs*/
+article.node-blog .comment-form .form-item label {width: 15%;}
+
+/*Volunteer registration*/
+#region-header-first .block-views, #region-header-first .block-multiblock, #region-header-first .block-custom-volunteer {margin-left: 25em;}
+
+/*photo reel*/
+.view-id-photo_reel .views-field-field-photo-1 { width: 22%;}
+
+.view-id-photo_reel .views-field-field-photo-2 {width: 22%;}
+
+.toasterInnerWrap .content .title {
+padding-left: 0;
+padding-top: 4.5em;
+}
+/*Forgot password page*/
+.page-user-password #region-content .region-content-inner {
+border-left: 0;
+margin-top: 8em;
+}
+/*Password reset page*/
+.page-user-reset  #region-content .region-content-inner {
+margin-top: 8em;
+}
+#block-block-35{
+margin-left: 20.5em;
+}
+/*Quiz Page*/
+.context-quiz #section-content{
+	z-index:1;
+}
+.context-quiz aside{
+	display:none;	
+}
+.context-quiz .region-content-inner{
+	margin-top:7em;
+	border-left:0;	
+}
+
+/*Access denied page*/
+#block-block-36 {
+   margin-left: 20.5em;
+}
+
+/*Raise an issue page*/
+.page-issue-campaign .civicIssueContent p.title{
+	padding:0 0 0.5em 8em;
+}
+
+.page-issue-campaign .merchandiseWinner p {
+	padding: 0.4em 3em 0.4em 6em;
+}
+
+.issueStep .stepContent .steps4RaiseIssue  .step{
+	width:26%; 
+	padding:0 2em 0 0;
+	margin:0.5em 2em 0.5em 0;
+	*padding:0 1em 0 0;
+	*margin:0.5em 1em 0.5em 0;
+} 
+.issueStep .stepContent .steps4RaiseIssue  .step img{*max-width:32%; }
+.issueStep .stepContent .steps4RaiseIssue  .step.three img{max-width:100%;  *max-width:40%;}
+
+
+
+.issueStep .stepContent .steps4RaiseIssue  .step.three{width:33%;}

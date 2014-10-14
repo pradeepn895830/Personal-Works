@@ -1,0 +1,10 @@
+name = Custom Volunteer Registration
+description = Custom Volunteer Registration For Project12
+package = Zolipe
+core = 7.x
+
+dependencies[] = custom_constituency
+
+files[] = custom_volunteer.module
+
+version = "7.x-alpha"

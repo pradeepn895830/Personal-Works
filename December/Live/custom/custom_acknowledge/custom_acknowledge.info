@@ -1,0 +1,10 @@
+name = Constituency Acknowledge
+description = Custom Constituency Acknowledge
+package = Zolipe
+core = 7.x
+
+dependencies[] = ctools
+
+files[] = custom_acknowledge.module
+
+version = "7.x-alpha"

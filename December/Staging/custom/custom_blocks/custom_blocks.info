@@ -1,0 +1,8 @@
+name = Custom Blocks
+description = Custom Blocks For MP and Constituency
+package = Zolipe
+core = 7.x
+
+files[] = custom_scraper.module
+
+version = "7.x-alpha"

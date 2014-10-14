@@ -1,0 +1,129 @@
+<?php
+
+/**
+ * Implementation of hook_form()
+ */
+function custom_acknowledge_form($form, &$form_state){
+global $user;
+$form = array();
+$desc = (user_is_anonymous())?t('This locality page is under construction. Please provide your email id and we shall inform you when the page is LIVE. Thanks!'):t('This locality page is under construction. Do you want us to inform you as soon as this page is LIVE? ');
+$submit = (user_is_anonymous())?t('Submit'):t('Yes, Inform Me');
+if(user_is_logged_in() && validate_subscriber($user->mail, intval($form_state['tid']))){
+   $submit = t('Already requested');
+}
+$access = (user_is_anonymous())?TRUE:FALSE;
+$form['#prefix'] = '<div id="custom_acknowledge_wrapper">';
+$form['desc'] = array(
+   '#type' => 'item',
+   '#markup' => $desc,
+);
+$form['tid'] = array(
+   '#type' => 'hidden',
+   '#value' => intval($form_state['tid']),
+);
+$form['email'] = array(
+   '#type' => 'textfield',
+   '#title' => t('Enter your email id here'),
+   '#size' => 40,
+   '#default_value' => (user_is_logged_in())?variable_get('email', $user->mail):'',
+   '#required' => TRUE,
+   '#element_validate' => array('acknowledge_email_validate'),
+   '#access' => $access
+);
+$form['submit'] = array(
+   '#type' => 'submit',
+   '#value' => $submit,
+   '#submit' => array('custom_acknowledge_submit'),
+   '#ajax' => array(
+      'callback' => 'custom_acknowledge_callback',
+      'wrapper'  => 'custom_acknowledge_wrapper',
+      'event'    => 'click',    
+   ),
+   '#suffix' => '<div id="error-message" class="errMsg"></div>',
+);
+if(user_is_logged_in() && validate_subscriber($user->mail, intval($form_state['tid']))){
+   $form['submit']['#disabled'] = TRUE;
+}
+//Attached placeholder js
+$form['#attached']['js'] = array(drupal_get_path('module', 'custom_acknowledge') . '/js/custom-ack.placeholder.js' => array('type' => 'file', 'scope' => 'footer'));
+$form['#suffix'] = '</div>';
+//drupal_set_message('<pre>'.print_r($form_state['tid'], TRUE).'</pre>');
+    return $form;
+}
+
+
+/**
+ * Form Submit handler
+ */
+function custom_acknowledge_submit($form, &$form_state){
+  
+ if(!form_get_errors()){
+     $data = $form_state['values'];
+     $changed = $created = time();
+     $sql = 'INSERT INTO constituency_acknowledge (email, tid, created, changed) VALUES (:email, :tid, :created, :changed)';
+     db_query($sql, array(':email' => $data['email'], ':tid' => $data['tid'], ':created' => $created, ':changed' => $changed));
+     $form_state['storage'] = TRUE;
+  }
+  $form_state['rebuild'] = TRUE;
+  $email = $form_state['values']['email'];
+  $message = drupal_mail('tellauser', 'notify', $email, language_default());
+  if(!empty ($message['result'])) {
+    drupal_set_message(t('You will be informed once the constituency details are obtained!'));
+    } 
+	else
+	{
+    drupal_set_message(t('There was a problem sending your message', 'error'));
+    }
+}
+
+function tellauser_mail($key, &$message, $params) {
+  
+        global $base_url;
+      
+        $message['subject'] = t('Thanks for Showing interest in the constituency.');
+ 
+        $message['body'][] = t("Hello,\nYour have just registered for information about a constituency. You will be notified once constituency is active.\nPlease click the link below to continue to our site.\n\n!link", array ('!link' => $base_url));
+}
+
+
+/**
+ * Callback function
+ */
+function custom_acknowledge_callback($form, &$form_state){
+  ctools_include('ajax');
+  
+  if(isset($form_state['storage'])){
+    $new_form_state['input'] = array();
+    $new_form = drupal_build_form($form['#form_id'], $new_form_state);
+    $commands[] = ajax_command_replace('#custom_acknowledge_wrapper', drupal_render($new_form));
+    //$commands[] = ajax_command_html('#error-message', t('Thanks for your interest.'));
+    $commands[] = ctools_ajax_command_reload();
+  }else{
+    $commands[] = ajax_command_replace('#custom_acknowledge_wrapper', drupal_render($form));
+    $commands[] = ajax_command_html('#error-message', theme('status_messages'));
+  } 
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Validate Email Address
+ */
+function acknowledge_email_validate($element, &$form_state){
+  $email = $element['#value'];
+  if(!valid_email_address($email)){
+     form_error($element,t('Please enter a valid email id.'));
+  }else if(validate_subscriber($form_state['values']['email'], $form_state['values']['tid'])){
+     form_error($element,t('You already have a Subscription.'));
+  }
+}
+
+/**
+ * Validate Existing Subscriber
+ */
+function validate_subscriber($mail, $constituency){
+   $access = FALSE;
+   $sql = "SELECT * FROM constituency_acknowledge WHERE email = :email AND tid = :tid LIMIT 1";
+   $result = db_query($sql, array(':email' => $mail, ':tid' => $constituency));
+   if($result->rowCount() > 0){ $access = TRUE; }
+  return $access;
+}

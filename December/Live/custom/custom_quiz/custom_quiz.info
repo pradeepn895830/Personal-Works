@@ -1,0 +1,10 @@
+name = Custom Quiz
+description = Custom Quiz module for Iamin.in
+package = Zolipe
+core = 7.x
+
+dependencies[] = custom_constituency
+
+files[] = custom_quiz.module
+
+version = "7.x-alpha"

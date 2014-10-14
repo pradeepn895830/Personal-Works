@@ -1,0 +1,111 @@
+
+/* ==================== Responsive menu =================== */
+.responsive-menu-wrapper{
+	/*background: url("../images/menu-bg.png") repeat-x scroll 0 -5px #F5F5F5;*/
+    border-radius: 2px;
+    width: 100%;
+	float:right;
+	margin-right:1em;
+	padding:11px 8px 11px 10px;
+	background:#35093b;
+}
+.navigation {
+	display:none;
+}
+#mobnav-btn {
+    clear: both;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+	text-transform:uppercase;
+	background:	url(../images/mob-menu/menu-btn.png) no-repeat top right;
+	text-indent:999px;
+	height:16px;
+}
+
+#section-header .responsive-menu-wrapper ul.sf-menu{
+	background:#35093b;	
+	padding:0 0 5px;
+	border-left:1px solid #000;
+	border-bottom:1px solid #000;
+	border-right:1px solid #000;
+}
+#section-header .responsive-menu-wrapper ul.sf-menu li{
+ 	color: #c3a358 !important;
+    font-size: 1.6em;
+    padding: 7px 12px;
+    text-align: left;
+    width: auto;
+	border-bottom:1px solid #a78452;
+}
+#section-header .responsive-menu-wrapper ul.sf-menu li:hover {
+	color:#000 !important;
+}
+#section-header .responsive-menu-wrapper ul.sf-menu span.menu-parent-item a{
+    padding: 0;	
+}
+
+#section-header ul.sf-menu li a.active{
+	color:#F7950C;
+}
+
+#section-header ul.sf-menu li.first a{
+	width:auto;	
+}
+
+.mobnav-subarrow {
+  	/*background: url("../images/arrow-down.png") no-repeat scroll center center transparent;*/
+    cursor: pointer;
+    display: block;
+    font-size: 0;
+    height: 16px;
+    position: absolute;
+    right: 12px;
+    top: 4px;
+    transition: all 0.1s ease-in-out 0s;
+    width: 16px;
+}
+
+.responsive-menu-wrapper .sf-menu {
+	 width: 100%!important;
+	 display: none;
+}
+
+.responsive-menu-wrapper .sf-menu.xactive {
+	 display: block!important;
+}
+
+.responsive-menu-wrapper .sf-menu li {
+	 float: none!important;
+	 display: block!important;
+}
+
+.responsive-menu-wrapper .sf-menu li a {
+	 float: none!important;
+}
+
+.responsive-menu-wrapper .sf-menu ul {
+	 position:static!important;
+	 display: none!important;
+}
+
+#section-header  ul.sf-menu .xpopdrop ul{
+    display: block !important;
+    margin: 8px 0 0;
+    width: 100%;
+}
+
+#section-header  ul.sf-menu .xpopdrop ul li{
+	padding:0 0 5px 0;
+	border-bottom:none;
+	font-size:1em;
+}
+
+#section-header  ul.sf-menu .xpopdrop ul li a{
+	padding: 7px 12px;
+}
+
+#zone-menu .block .inner-banner {
+    font-size: 18px;
+    padding: 15px 0 15px;
+}

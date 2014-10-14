@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * Implementation of hook_block_view_alter().
+ */
+function custom_blocks_block_view_alter(&$data, $block){
+   if($block->module == 'views' && $block->delta == 'member_of_parliament-block_name'){
+	   $argA = arg(0); 
+	   $argB = arg(1);
+	   if($argA == 'node' && is_numeric($argB)){
+	      $node = node_load($argB);
+		  $term = taxonomy_term_load($node->field_name['und'][0]['tid']);
+		  $data['subject'] = t('@name\'s Details', array('@name'=>$term->name));
+	   }
+   }
+}
+
+
+/**
+ * Block Visibility for Blocks
+ *//*
+
+function issues_block_visibility(){
+    $access = FALSE;
+	$arg1   = arg(0);
+	$arg2   = arg(1);
+	if($arg1 == 'node' && is_numeric($arg2)){
+	    $node = node_load($arg2);
+		$access = ($node->type == 'issues' || $node->type == '')?TRUE:FALSE;
+	}
+	if($arg1 == 'latest-issues'){
+	    $access = TRUE;
+	}
+  return $access;	
+}*/
+
+
+/**
+ * Implementation of hook_block_info().
+ */
+function custom_blocks_block_info(){
+    $blocks = array();
+	$blocks['questions'] = array('info'  => t('Ask Any Question'),'cache' => DRUPAL_NO_CACHE,);
+	return $blocks;	
+} 
+
+/**
+ * Implementation of hook_block_view().
+ */
+function custom_blocks_block_view($delta=''){
+    $block = array();
+
+	switch($delta){
+		case 'questions':
+			$block['subject'] = t('Submit a Query');
+			$block['content'] = drupal_render(drupal_get_form('custom_blocks_form'));
+		break;
+	}
+   return $block;	
+}  
+
+/**
+ * Implementation of hook_form().
+ */
+function custom_blocks_form($form, &$form_state){
+ 
+        $form['tid']  = array(
+		    '#type' => 'hidden',
+			'#value' => arg(2),
+		); 
+		$form['body'] = array(
+		    '#title' => t('Submit a Query'),
+			'#type' => 'textarea',
+			'#rows' => 4,
+			'#cols' => 40,
+			'#required' => TRUE,
+			'#suffix' => '<div id="success-message"></div>',
+		);
+		$form['submit'] = array(
+		   '#type' => 'submit',
+		   '#value' => t('Submit'),
+		   '#submit' => array('custom_blocks_submit'),
+		);
+	    $form['#prefix'] = '<div id="ajax_wrapper_custom_blocks">';
+	    $form['#suffix'] = '</div">';
+		//Attached js to remove message
+	   if(user_is_anonymous()){
+	      $form['#attached']['js'][] = array('data'=>drupal_get_path('module', 'custom_search') . '/js/custom-login.js','type'=>'file');
+	   }
+	   if(user_is_logged_in()){
+		   $form['#attached']['js'] = array(drupal_get_path('module', 'custom_blocks') . '/js/custom.blocks.js'=> array('type' => 'file'));
+		   $form['submit']['#ajax'] = array(
+				'callback' => 'custom_blocks_callback',
+				'wrapper' => 'ajax_wrapper_custom_blocks',
+			);
+	   }		
+    return $form;
+} 
+
+/**
+ * Implementation of hook_submit().
+ */
+function  custom_blocks_submit($form, &$form_state){ 
+  global $user;
+	$tid = $form_state['values']['tid'];
+	$body = check_plain($form_state['values']['body']);
+	$title = views_trim_text(array('max_length' => 60, 'word_boundary' => TRUE), $body);
+	
+  	//Prepare Node Object
+	$node = new stdClass();
+	$node->type = 'ask_a_qustion';
+	node_object_prepare($node);
+	
+	//Set Node Title
+	$node->title = $title;
+	//Set Node Author
+	$node->uid = $user->uid;
+	//Body Text UTF8
+	$body = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $body);
+	$node->body[LANGUAGE_NONE][0]['value']   = check_plain($body);
+	$node->body[LANGUAGE_NONE][0]['safe_value'] = text_summary($body);
+	$node->body[LANGUAGE_NONE][0]['format']  = 'filtered_html';
+	//Constituency
+	$node->field_constituency[LANGUAGE_NONE][0]['tid'] = $tid;
+	node_save($node);
+	unset($node);
+   $form_state['rebuild'] = FALSE;
+}
+
+/**
+ * Ajax Callback
+ */
+function custom_blocks_callback($form, &$form_state){
+       $commands[] = ajax_command_replace('#ajax_wrapper_custom_blocks', drupal_render($form));
+	   if(!form_get_errors()){
+	      drupal_set_message('Question submitted successfully', 'status', FALSE);
+	      $messages = theme_status_messages(array('display' => 'status'));
+	      $commands[] = ajax_command_html('#success-message', $messages);
+	   }
+    return array('#type' => 'ajax', '#commands' => $commands);
+}
+

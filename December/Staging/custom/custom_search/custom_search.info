@@ -1,0 +1,8 @@
+name = Site custom search
+description = Site custom search for Project iam.in
+package = Zolipe
+core = 7.x
+
+files[] = custom_search.module
+
+version = "7.x-alpha"

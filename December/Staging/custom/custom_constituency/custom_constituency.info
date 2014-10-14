@@ -1,0 +1,12 @@
+name = Constituency finder
+description = Custom Constituency finder
+package = Zolipe
+core = 7.x
+
+dependencies[] = ctools
+dependencies[] = ajax_register
+dependencies[] = profile2
+
+files[] = custom_constituency.module
+
+version = "7.x-alpha"

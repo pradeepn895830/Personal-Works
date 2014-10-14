@@ -1,0 +1,251 @@
+<?php
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function custom_volunteer_menu(){
+    $items = array();
+	$items['search-locality'] = array(
+	   'page callback' => 'search_locality',
+	   'access arguments' => array('access content'),
+	   'type' => MENU_CALLBACK,
+	);
+   return $items;	
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function custom_volunteer_form_volunteer_registration_node_form_alter(&$form, &$form_state, $form_id){
+    //Disable Form if applied previously
+    if(user_is_logged_in() && !validate_volunteer_registration('create')){
+	    drupal_set_message('You\'ve already submitted your application.');
+		drupal_goto('<front>');
+    }
+	//Disable Locality Selection
+	$form['field_pin_code_locality'][LANGUAGE_NONE][0]['value']['#attributes'] = array('readonly' => 'readonly');
+
+	//Add Choose Locality Options
+	$addLocality = l(t('Choose Locality'), 'consfinder/chooselocality/nojs', array('attributes' => array('class' => array('ctools-use-modal', 'ctools-modal-ctools-ajax-register-style'), 'id' => 'global-choose-locality')));
+	$form['field_pin_code_locality'][LANGUAGE_NONE][0]['value']['#suffix'] = (!user_is_anonymous())?$addLocality:'';
+	
+	//Check if User Has Default Constituency	
+	if(isset($_SESSION['defaultConsName']) && !empty($_SESSION['defaultConsName'])){
+	   $form['field_pin_code_locality'][LANGUAGE_NONE][0]['value']['#default_value'] = $_SESSION['defaultConsName'];
+	}
+
+	
+	//Add Date of Birth Validation
+	$form['field_date_of_birth'][LANGUAGE_NONE][0]['value']['#element_validate'] = array('validate_dob');
+	//Add mobile field validation
+	$form['field_mobile_number'][LANGUAGE_NONE][0]['value']['#element_validate'] = array('validate_mobile');
+	//Hide Title field and other fields
+	$form['title']['#access'] = FALSE;
+	$form['field_highest_education_level']['#access'] = FALSE;
+	$form['field_time_span']['#access'] = FALSE;
+	$form['field_languages_read']['#access'] = FALSE;
+	$form['field_languages_write']['#access'] = FALSE;
+	$form['field_languages_speak']['#access'] = FALSE;
+	
+    //Rename Save button to Submit
+    $form['actions']['submit']['#value'] = t('Submit');
+	//Hide Submit Button if user is anonymouse
+	if(user_is_anonymous()) { $form['actions']['submit']['#attributes'] = array('disabled' => 'disabled');}
+    //Body Prefix Text 
+    $form['body'][LANGUAGE_NONE][0]['#prefix'] = '<div class="description" id="intro">'.t('Feel free to include an early experience that changed the way you feel about the world or any incident that inspired you to work for social good.').'</div>';
+    //Change Page Title to Volunteer Registration
+    drupal_set_title(t('Volunteer Registration'));
+	//Remove js
+	$path = url('node/17542', array('absolute'=>TRUE));
+	$form['#attached']['js'][] = array('data' => array('customvolunteer' => array('tpath' => $path)), 'type' => 'setting');
+    $form['#attached']['js'][] = array('data'=>drupal_get_path('module', 'custom_volunteer') . '/js/custom.volunteer.js','type'=>'file');
+	if(user_is_anonymous()){
+	    $form['#attached']['js'][] = array('data'=>drupal_get_path('module', 'custom_constituency') . '/js/anonymous.volunteer.js','type'=>'file');
+	}
+	
+	//Set Default Profile value in volunteer Registration
+	if(user_is_logged_in()){
+	   global $user;
+	   $userObj = user_load($user->uid);
+	   $profile = profile2_load_by_user($userObj, 'main');
+	   if(is_object($profile) && !empty($profile)){
+	 //  drupal_set_message('<pre>'.print_r($profile->field_gender,TRUE).'</pre>');
+	      $form['field_first_name'][LANGUAGE_NONE][0]['value']['#default_value'] = (isset($profile->field_fname['und']) && !empty($profile->field_fname['und']))?$profile->field_fname['und'][0]['value']:'';
+	      $form['field_last_name'][LANGUAGE_NONE][0]['value']['#default_value'] = (isset($profile->field_lname['und']) && !empty($profile->field_lname['und']))?$profile->field_lname['und'][0]['value']:'';
+		  if((isset($profile->field_dob['und'])&& !empty($profile->field_dob['und']))) {
+		  $originalDate = (String)$profile->field_dob['und'][0]['value']; 
+		  $newDate = date("d/m/Y", strtotime($originalDate));
+		  //$form['field_date_of_birth'][LANGUAGE_NONE][0]['value']['#default_value'] = (isset($profile->field_dob['und']) && !empty($profile->field_dob['und']))?$profile->field_dob['und'][0]['value']:'';
+		  $form['field_date_of_birth'][LANGUAGE_NONE][0]['value']['#default_value'] = $newDate;
+		  }
+		  $form['field_gender'][LANGUAGE_NONE]['#default_value'] = (isset($profile->field_gender['und']) && !empty($profile->field_gender['und']))?$profile->field_gender['und'][0]['value']:'';
+		  $form['field_profession'][LANGUAGE_NONE][0]['value']['#default_value'] = (isset($profile->field_porfession['und']) && !empty($profile->field_porfession['und']))?$profile->field_porfession['und'][0]['value']:'';
+	   }
+	}
+    //Add Custom submit handler
+    array_push($form['actions']['submit']['#submit'], 'set_form_message');
+}
+
+function set_form_message($form, &$form_state){
+    //Clear pervious session message
+	unset($_SESSION['messages']);
+    //Get the Locality values
+	if(isset($form_state['values']['field_locality'])) {
+    $locality = $form_state['values']['field_locality'];
+    if(isset($locality['und']) && is_array($locality['und']) && validate_volunteer_registration('submit', $locality['und'][0]['tid'])){
+       drupal_set_message(t('Thank you for your interest to be a volunteer in @locality. We are bringing our platform there soon. We shall keep you posted.', array('@locality'=> $locality['und'][0]['name'])));
+	   }
+    }else{
+	   drupal_set_message(t('Thank You for your interest in becoming a Volunteer. We will get in touch with you shortly.  But you can start contributing to your locality by raising an issue now.'));
+	}
+	$form_state['redirect'] = 'raise-issue';
+}
+
+/**
+ * Validate Date of Birth
+ */
+function validate_dob($element, &$form_state){
+   $dob = $element['#value'];
+   $pattern = '/([012]?[1-9]|[12]0|3[01])\/(0?[1-9]|1[012])\/([0-9]{4})/';
+   if(!preg_match($pattern, $dob)){
+      form_error($element,t('Please enter valid Date of Birth (dd/mm/yyyy)'));
+   }	 
+}
+
+/**
+ * Validate Mobile Filed
+ */
+function validate_mobile($element, &$form_state){
+   $mobile = $element['#value'];
+   $pattern = '/^[789][0-9]{9}$/';
+   if(!preg_match($pattern, $mobile)){
+      form_error($element,t('Please enter valid 10 digit mobile no.'));
+   }	 
+}
+/**
+ * Populate Locality Suggessions
+ */
+function search_locality($keyword){
+    $options = array();
+	
+	$postfield = array('q'=>$keyword);
+
+    $channel = curl_init(CC_SEARCH_CONSTITUENCIES);
+	curl_setopt($channel, CURLOPT_POST, true);
+	curl_setopt($channel, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($channel, CURLOPT_POSTFIELDS, http_build_query($postfield));	
+	$searchRes = curl_exec($channel);
+	curl_close($channel); 
+
+	$searchRes = str_replace("<pre>",'',$searchRes);// Bug in Priyas service returns a <pre>, so strip it
+	$searchRes = json_decode($searchRes);
+	foreach($searchRes as $result){
+	  if(!empty($result->constituency)){
+	    $options[$result->constituency] = $result->constituency;
+	  }
+	}
+  drupal_json_output($options);
+} 
+
+/**
+ * Implementation of hook_node_access().
+ */
+function custom_volunteer_node_access($node, $op, $account){
+   if($op == 'create' && $account->uid == 0 && $node == 'volunteer_registration')
+  return NODE_ACCESS_ALLOW; 
+} 
+
+
+/**
+ * Implementation of hook_block_info().
+ */
+function custom_volunteer_block_info(){
+    $blocks = array();
+	$blocks['volunteer_signup'] = array('info'  => t('Sign Up for Volunteer'),'cache' => DRUPAL_NO_CACHE,);
+	$blocks['volunteer_slogan'] = array('info'  => t('Volunteer Slogan'),'cache' => DRUPAL_NO_CACHE,);
+   return $blocks;	
+} 
+
+/**
+ * Implementation of hook_block_view().
+ */
+function custom_volunteer_block_view($delta=''){
+    $block = array();
+	switch($delta){
+		case 'volunteer_signup':
+		    $access = (validate_volunteer_registration('create'))?TRUE:FALSE;
+			$block['subject'] = t('​Want to lead the change in your locality ?');
+			$block['content'] = array('#markup' => drupal_render(drupal_get_form('volunteer_signup_form')), '#access' => $access);
+		break;
+		case 'volunteer_slogan':
+		    $markup  = '<h2 class="title">'.t('Volunteer Application Form').'</h2>';
+			$markup .= '<div class="desc">'.t('Please provide the following information to stand a chance to be the Citizen Representative of your locality.').'</div>';
+			$block['subject'] = t('Volunteer Slogan');
+			$block['content'] = $markup;
+		break;
+	}
+   return $block;	
+}
+
+/**
+ * Implementation of hook_form().
+ */
+function volunteer_signup_form($form, &$form_state){
+		$form['markup'] = array(
+		   '#type' => 'item',
+		   '#markup' => '<h2 class="block-title">'.t('​Want to lead the').'</h2><h2 class="block-title">'.t('change in your locality ?').'</h2>',
+		);
+		$form['submit'] = array(
+		   '#type' => 'submit',
+		   '#value' => t('Be a Volunteer'),
+		   '#attributes' => array('id' => 'volunteer-signup'),
+		);
+	   if(user_is_anonymous()){
+	      $form['#attached']['js'][] = array('data'=>drupal_get_path('module', 'custom_search') . '/js/custom-login.js','type'=>'file');
+	   }
+	   if(user_is_logged_in() && !validate_volunteer_registration()){
+	      $form['#attached']['js'][] = array('data'=>drupal_get_path('module', 'custom_search') . '/js/custom-message.js','type'=>'file');
+	   }
+    return $form;
+}
+
+
+function volunteer_signup_form_submit($form, &$form_state){
+    $query = array();
+	$url  = 'node/add/volunteer-registration';
+	$firstName = isset($form_state['values']['name'])?$form_state['values']['name']:'';
+	$location  = isset($form_state['values']['location'])?$form_state['values']['location']:'';
+	if(!empty($firstName)) { $url = $url.'&firstName='.$firstName;}
+	if(!empty($location)) { $url = $url.'&location='.$location; }
+	//Redirect to Volunteer Registration form.
+	$form_state['redirect'] = array($url,array('query' => array('destination' => drupal_get_path_alias(current_path()))));
+}
+
+function validate_volunteer_registration($op = 'create', $val = null){
+    global $user;
+	
+	if(user_is_anonymous()){ return TRUE;}
+	$access = FALSE;
+        switch($op){
+           case 'create':
+			//Allow if current user is Registerd User
+			if(array_key_exists(2, $user->roles)){
+				$query = 'SELECT nid FROM node WHERE type = :type AND uid = :uid';
+				$result = db_query($query, array(':type'=>'volunteer_registration', ':uid' => $user->uid));
+			}
+          break;
+          case 'submit':
+              $query = 'SELECT * FROM field_data_field_visibility WHERE field_visibility_value = 1 AND bundle = :bundle AND entity_id = :id';
+              $result = db_query($query, array(':bundle' => 'constituency', ':id' => $val));
+          break;
+       } 
+    if((isset($result)) && ($result->rowCount() == 0))
+	{
+		$access = TRUE; 
+	}
+    else {$access = FALSE;}
+  return $access;	
+}
+
+

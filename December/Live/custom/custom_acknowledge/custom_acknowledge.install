@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ * Create Table for Default Constituency.
+ */
+
+function custom_acknowledge_schema(){
+    $schema = array();
+	$schema['constituency_acknowledge'] = array(
+	   'description' => 'Store visitor Constituency',
+	   'fields' => array(
+	      'id' => array(
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+		   ),
+	      'email' => array(
+		    'type' => 'varchar',
+                    'length' => 200,
+		    'not null' => TRUE,
+		   ),
+	      'tid' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	      'created' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	      'changed' => array(
+		    'type' => 'int',
+			'length' => 11,
+			'not null' => TRUE,
+		   ),
+	    ),
+	   'primary key' => array('id'),	
+	);
+  return $schema;	
+}
